@@ -1,63 +1,36 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useProjectStore } from '@/store/ProjectStore'
 import { useUserStore } from '@/store/UserStore'
-import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue';
+import { ref, computed } from 'vue';
+import ProjectModal from '@/components/ProjectModal.vue';
 
 const projectStore = useProjectStore()
 const userStore = useUserStore()
-const { projectList } = storeToRefs(projectStore)
-const { siteId } = storeToRefs(userStore)
-const printableProjectNameList = ref<string[]>([])
-const dialog = ref(false)
+const siteId = ref(userStore.siteId)
+const projectList = projectStore.projectList
 
-const handleFetchProject = () => {
-  projectStore.fetchProjectList(siteId.value)
+const selectedProjectId = ref()
+const selectedProjectTitle = computed(() => {
+  return fakeData.find((project) => project.value === selectedProjectId.value)?.title
+})
+
+const fakeData = [
+  { title: "Project 1", value: "1" },
+  { title: "Project 2", value: "2" },
+  { title: "Project 3", value: "3" },
+  { title: "Project 4", value: "4" }
+]
+
+const navigateTo = (index: number) => {
+  selectedProjectId.value = fakeData[index].value
 }
-
-const handleClose = () => {
-  dialog.value = false
-  console.log(dialog.value)
-}
-
-watch(dialog, () => {
-  console.log(dialog.value)
-})
-
-watch(projectList, () => {
-  printableProjectNameList.value = projectList.value.projects.project.map((project) => project.name)
-})
-
-onMounted(() => {
-  handleFetchProject()
-})
 
 </script>
 
 <template>
-  <v-combobox class="mt-12 mx-auto pa-16" clearable label="Projects" :items="printableProjectNameList"
-    variant="outlined"></v-combobox>
-
+  <v-select class="mt-12 mx-auto pa-16" label="Projects" :items="fakeData" v-model="selectedProjectId"
+    variant="outlined"></v-select>
   <div class="text-center pa-4">
-    <v-btn prepend-icon="mdi-cog" size="small" text="Workbooks" @click="dialog = true">
-      List Workbooks
-    </v-btn>
-
-    <v-dialog
-      v-model="dialog"
-      transition="dialog-bottom-transition"
-      fullscreen
-    >
-    <v-card>
-        <v-toolbar>
-          <v-btn icon="mdi-close" @click="handleClose()"></v-btn>
-
-          
-          <v-toolbar-title>Project Name</v-toolbar-title>
-
-          <v-spacer></v-spacer>
-        </v-toolbar>
-      </v-card>
-    </v-dialog>
+    <ProjectModal @navigateTo="navigateTo" :projectData="fakeData" :selectedProjectTitle="selectedProjectTitle" :selectedProjectId="selectedProjectId" />
   </div>
 </template>
