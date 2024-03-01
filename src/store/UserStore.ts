@@ -13,7 +13,7 @@ export const useUserStore = defineStore("user", {
   },
   persist: true,
   actions: {
-    async registerUser(username: string, password: string) {
+    async login(username: string, password: string) {
       try {
         const userData = await login(username, password);
         this.siteId = userData.siteId
