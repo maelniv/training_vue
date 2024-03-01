@@ -3,28 +3,36 @@ import { ref, watch } from 'vue';
 import { useUserStore } from '@/store/UserStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router';
-import { useField, useForm } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import * as yup from 'yup'
 
-interface LoginForm {
-    email: string;
-    password: string;
-};
-
 const router = useRouter()
-const visible = ref(false);
 const userStore = useUserStore()
-const { siteId, isUserConnected } = storeToRefs(userStore)
+const isPasswordVisible = ref(false);
+const { siteId, isUserConnected, errorMessage } = storeToRefs(userStore)
 
-const { value: email, errorMessage: emailError } = useField('email', yup.string().required('Email is required').email('Please enter a valid email'));
-const { value: password, errorMessage: passwordError } = useField('password', yup.string().required('Password is required'));
+const loginFormSchema = yup.object().shape({
+    email: yup.string().required('Email is required')
+    // .email('Please enter a valid email'),
+    ,
+    password: yup.string().required('Password is required'),
+});
+
+const { validate, errors, defineField } = useForm({
+    validationSchema: loginFormSchema,
+    initialValues: {
+        email: '',
+        password: '',
+    }
+})
+
+const [email] = defineField('email')
+const [password] = defineField('password')
 
 const handleSubmit = async () => {
-    try {
-        await validate();
-        // userStore.login(email.value as string, password.value as string);
-    } catch {
-        console.error("Invalid form")
+    const state = await validate()
+    if (state.valid) {
+        userStore.login(email.value, password.value)
     }
 }
 
@@ -34,36 +42,39 @@ watch(siteId, () => {
     }
 });
 
-const schema = yup.object({
-    email,
-    password
-});
+watch([email, password], () => {
+    if (errorMessage.value != "") {
+        errorMessage.value = ""
+    }
+})
 
-const { validate } = useForm<LoginForm>({
-    validationSchema: schema,
-});
 </script>
 
 <template>
     <div>
         <v-sheet class="mx-auto" width="300">
-            <v-form @submit.prevent="handleSubmit">
+            <v-form @submit.prevent="handleSubmit" error-messages="test">
                 <div class="text-subtitle-1 text-medium-emphasis">Username</div>
-                <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
-                    variant="outlined" v-model="email" autocomplete="username"
-                    :error-messages="emailError"></v-text-field>
+                <v-text-field name="email" v-model="email" density="compact" placeholder="Email address"
+                    prepend-inner-icon="mdi-email-outline" variant="outlined" autocomplete="username"
+                    :error-messages="errors.email"></v-text-field>
 
                 <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
                     Password
                 </div>
-                <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
+                <v-text-field :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'" :type="isPasswordVisible ? 'text' : 'password'"
                     density="compact" placeholder="Enter your password" prepend-inner-icon="mdi-lock-outline"
                     variant="outlined" v-model="password" autocomplete="current-password"
-                    @click:append-inner="visible = !visible" :error-messages="passwordError"></v-text-field>
+                    @click:append-inner="isPasswordVisible = !isPasswordVisible" :error-messages="errors.password">
+                </v-text-field>
 
-                <v-btn block class="mb-8" color="blue" size="large" variant="tonal" type="submit">
+
+                <v-btn block class="mb-8" color="wiiisdom_orange" size="large" variant="tonal" type="submit">
                     Log In
                 </v-btn>
+
+                <v-alert v-if="errorMessage != ''" color="error" icon="$error" title="Erreur" :text="errorMessage">
+                </v-alert>
             </v-form>
         </v-sheet>
     </div>

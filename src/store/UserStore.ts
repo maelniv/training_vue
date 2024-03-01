@@ -9,6 +9,7 @@ export const useUserStore = defineStore("user", {
       siteId: "",
       accessToken: "",
       isUserConnected: false,
+      errorMessage: ""
     };
   },
   persist: true,
@@ -20,11 +21,9 @@ export const useUserStore = defineStore("user", {
         this.accessToken = userData.accessToken
         this.isUserConnected = userData.isUserConnected;
         axios.defaults.headers.common["X-Tableau-Auth"] = `${userData.accessToken}`
-      } catch (error) {
-        //TODO: Error handling
-        console.log(error);
+      } catch (error: any) {
         this.isUserConnected = false;
-        return error;
+        this.errorMessage = error.response.data.error.detail;
       }
     },
   },

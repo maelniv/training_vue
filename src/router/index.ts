@@ -18,8 +18,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  console.log(to.name);
-  console.log(isUserConnected.value);
   if (!isUserConnected.value && to.name !== "/login") {
     return { name: "/login" };
   }

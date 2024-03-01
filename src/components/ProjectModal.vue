@@ -49,6 +49,15 @@ const navigate = (direction: number) => {
     emit('navigateTo', nextIndex)
 }
 
+document.addEventListener('keydown', function (e) {
+    if (e.key === "ArrowRight" && isOpen.value) {
+        navigate(1)
+    }
+    if (e.key === "ArrowLeft" && isOpen.value) {
+        navigate(-1)
+    }
+});
+
 </script>
 
 <template>
