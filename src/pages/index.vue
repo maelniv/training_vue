@@ -7,15 +7,15 @@ import ProjectModal from '@/components/ProjectModal.vue';
 const projectStore = useProjectStore()
 const userStore = useUserStore()
 const siteId = ref(userStore.siteId)
-const projectList = projectStore.projectList
+const projectList = projectStore.projectList.projects.project
 
 const selectedProjectId = ref()
 const selectedProjectTitle = computed(() => {
-  return projectList.projects.project.find((project) => project.name === selectedProjectId.value)?.name
+  return projectList.find((project) => project.id === selectedProjectId.value)?.name
 })
 
 const navigateTo = (index: number) => {
-  selectedProjectId.value = projectList.projects.project[index].id
+  selectedProjectId.value = projectList[index].id
 }
 
 const handleFetchProjects = async () => {
@@ -29,9 +29,9 @@ watch(siteId, () => {
 </script>
 
 <template>
-  <v-select class="mt-12 mx-auto pa-16" label="Projects" v-model="selectedProjectId"
+  <v-select class="mt-12 mx-auto pa-16" label="Projects" :items="projectList" itemTitle="name" itemValue="id" v-model="selectedProjectId"
     variant="outlined"></v-select>
   <div class="text-center pa-4">
-    <ProjectModal @navigateTo="navigateTo" :projectData="projectList.projects.project" :selectedProjectTitle="selectedProjectTitle" :selectedProjectId="selectedProjectId" />
+    <ProjectModal @navigateTo="navigateTo" :projectData="projectList" :selectedProjectTitle="selectedProjectTitle" :selectedProjectId="selectedProjectId" />
   </div>
 </template>

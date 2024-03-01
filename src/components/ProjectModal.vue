@@ -40,7 +40,6 @@ const findNextProjectIndex = (direction: number) => {
 
 const navigate = (direction: number) => {
     const nextIndex = findNextProjectIndex(direction)
-    console.log(props.projectData[nextIndex].value)
     emit('navigateTo', nextIndex)
 }
 
@@ -53,9 +52,12 @@ const navigate = (direction: number) => {
     <v-dialog v-model="isOpen" transition="dialog-bottom-transition" fullscreen>
         <v-card>
             <v-toolbar>
-                <v-btn icon @click="closeModal"><v-icon>mdi-close</v-icon></v-btn>
+                <v-btn icon @click="closeModal" ><v-icon>mdi-close</v-icon></v-btn>
                 <v-btn icon @click="navigate(-1)"><v-icon>mdi-chevron-left</v-icon></v-btn>
                 <v-toolbar-title class="text-center">{{ selectedProjectTitle }}</v-toolbar-title>
+                <div>
+                    
+                </div>
                 <v-btn icon @click="navigate(1)"><v-icon>mdi-chevron-right</v-icon></v-btn>
                 <v-spacer></v-spacer>
             </v-toolbar>
