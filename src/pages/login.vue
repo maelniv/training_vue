@@ -3,16 +3,27 @@ import { ref, watch } from 'vue';
 import { useUserStore } from '@/store/UserStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router';
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup'
+
+interface LoginForm {
+    email: string;
+    password: string;
+};
 
 const router = useRouter()
 const visible = ref(false);
-const username = ref("")
-const password = ref("")
+const username = useField("username", yup.string().required("Password is required"));
+const password = useField("password", yup.string().email("Email must be valid").required("Email is required"));
 const userStore = useUserStore()
 const { siteId, isUserConnected } = storeToRefs(userStore)
 
 const handleLogin = () => {
-    userStore.registerUser(username.value, password.value)
+    try {
+        await validate();
+        userStore.registerUser(username, password)
+
+    }
 }
 
 watch(siteId, () => {
@@ -21,12 +32,14 @@ watch(siteId, () => {
     }
 });
 
+const { handleSubmit, validate } = useForm<LoginForm>();
+
 </script>
 
 <template>
     <div>
         <v-sheet class="mx-auto" width="300">
-            <v-form>
+            <v-form @submit.prevent="handleLogin">
                 <div class="text-subtitle-1 text-medium-emphasis">Username</div>
 
                 <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"

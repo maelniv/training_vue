@@ -34,4 +34,3 @@ handleFetchProjects()
       :selectedProjectId="selectedProjectId" />
   </div>
 </template>
-@/types/project/ProjectType
