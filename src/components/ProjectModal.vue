@@ -1,16 +1,12 @@
 <script setup lang="ts">
+import { ProjectType } from '@/type/project/ProjectType';
 import { ref, defineProps } from 'vue';
-
-interface Project {
-    title: string;
-    value: string;
-}
 
 const emit = defineEmits(['navigateTo'])
 
 const props = defineProps({
     projectData: {
-        type: Array as () => Project[],
+        type: Array as () => ProjectType[],
         default: () => []
     },
     selectedProjectTitle: String,
@@ -31,7 +27,7 @@ const openModal = () => {
 }
 
 const findNextProjectIndex = (direction: number) => {
-    const currentIndex = props.projectData.findIndex((project) => project.value === props.selectedProjectId)
+    const currentIndex = props.projectData.findIndex((project) => project.id === props.selectedProjectId)
     const nextIndex = (currentIndex + direction)
     if (nextIndex < 0) {
         return props.projectData.length - 1

@@ -17,12 +17,12 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
 });
 
-// router.beforeEach((to, from) => {
-//   console.log(to.name);
-//   console.log(isUserConnected.value);
-//   if (!isUserConnected.value && to.name !== "/login") {
-//     return { name: "/login" };
-//   }
-// });
+router.beforeEach((to, from) => {
+  console.log(to.name);
+  console.log(isUserConnected.value);
+  if (!isUserConnected.value && to.name !== "/login") {
+    return { name: "/login" };
+  }
+});
 
 export default router;
