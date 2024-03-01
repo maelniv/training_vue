@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { WorkbooksListType } from "@/type/workbook/WorkbooksListType";
+import { WorkbooksListType } from "@/types/workbook/WorkbooksListType";
 import fetchWorkbook from "@/api/fetchWorbook";
 
 interface WorkbookType {
@@ -14,9 +14,9 @@ export const useWorkbookStore = defineStore("workbook", {
   },
   persist: true,
   actions: {
-    async fetchProjectList(siteId: string, projectId: string) {
+    async fetchWorkbookList(siteId: string, projectName: string) {
       try {
-        this.workbookList = await fetchWorkbook(siteId, projectId);
+        this.workbookList = await fetchWorkbook(siteId, projectName);
       } catch (error) {
         console.log(error);
         return error;

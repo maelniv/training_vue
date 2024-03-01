@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ProjectsListType } from "@/type/project/ProjectsListType.js";
+import { ProjectsListType } from "@/types/project/ProjectsListType.js";
 import fetchProject from "@/api/fetchProject";
 
 interface ProjectType {

@@ -1,5 +1,5 @@
 import axios from './axios.js'
-import { UserType } from '@/type/user/UserType.js';
+import { UserType } from '@/types/user/UserType.js';
 
 export default function login(username: string, password: string): Promise<UserType> {
     return new Promise<UserType>((resolve, reject) => {

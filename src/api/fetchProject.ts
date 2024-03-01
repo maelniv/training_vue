@@ -1,6 +1,6 @@
 import axios from './axios.js'
 
-import { ProjectsListType } from '@/type/project/ProjectsListType.js';
+import { ProjectsListType } from '@/types/project/ProjectsListType.js';
 
 export default function fetchProject(siteId: string) : Promise<ProjectsListType> {
     return new Promise<ProjectsListType>((resolve, reject) => {

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import login from "@/api/login";
-import { UserType } from "@/type/user/UserType";
+import { UserType } from "@/types/user/UserType.js";
 import axios from '../api/axios.js'
 
 export const useUserStore = defineStore("user", {

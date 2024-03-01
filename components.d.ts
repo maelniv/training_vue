@@ -12,5 +12,7 @@ declare module 'vue' {
     ProjectModal: typeof import('./src/components/ProjectModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Workbook: typeof import('./src/components/Workbook.vue')['default']
+    WorkbookList: typeof import('./src/components/WorkbookList.vue')['default']
   }
 }
